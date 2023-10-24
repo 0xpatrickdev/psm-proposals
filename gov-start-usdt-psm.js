@@ -12,7 +12,7 @@ const getManifestCall = harden([
       decimalPlaces: 6,
       denom:
         "ibc/079DAF1995A28BCD3B4E3D38948BB0FBC1CDE47939820CBAB7C02AFB88FF31A3",
-      keyword: "USDT_kav",
+      keyword: "USDT",
       proposedName: "USDT",
     },
     installKeys: {
