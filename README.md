@@ -16,7 +16,7 @@ agd tx swingset install-bundle @$B3 --from $WALLET --node $NODE --chain-id $CHAI
 ```bash
 agd tx gov submit-proposal swingset-core-eval gov-start-psm-permit.json gov-start-usdc-psm.js \
   --title="Start USDC (Noble) PSM" --description="Evaluate gov-start-usdc-psm.js" --deposit=1000000ubld \
-    --gas=auto --gas-adjustment=1.2
+    --gas=auto --gas-adjustment=1.2 --from $WALLET -y -b block
 ```
 
 
@@ -25,7 +25,7 @@ agd tx gov submit-proposal swingset-core-eval gov-start-psm-permit.json gov-star
 ```bash
 agd tx gov submit-proposal swingset-core-eval gov-start-psm-permit.json gov-start-usdt-psm.js \
   --title="Start USDT (Kava) PSM" --description="Evaluate gov-start-usdt-psm.js" --deposit=1000000ubld \
-    --gas=auto --gas-adjustment=1.2
+    --gas=auto --gas-adjustment=1.2 --wallet $from -y -b block
 ```
 
 ## IBC Denoms
