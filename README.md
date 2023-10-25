@@ -1,22 +1,25 @@
 ## To Submit On-chain
 
-### Install Bundles
+### (Maybe) Install Bundles
 ```bash
-$B1=b1-820164f689d730163488efe6911b89f4f4dfb9b11b33b711c24340416c7ea90ec6a311ceb8c26cc2d1c6624e8d5b714c73eab1a08d99bb81c22d815acefd94fd.json
-$B2=b1-d6bf1435f5ef0fc5f8386bc6f6d4563f9f2b8c1117d7d778e39d34601436d78cac7e5000f73857ed5b3dcc76742ff0d392d8a3e3164d7775a9c85ed0c30fdeda.json
-$B3=b1-eb7db38002a9f53cb6df39c5b23c816d8b6381c1388c9fec772e0cdbb055f55641da9219a4891ecee5697c9cc3c6a988d0ffa75d191e806f4867990b4ce3df83.json
+$B1=b1-4c34c89b707bc8ece5a41e97e6a354081f7ae8a40391f1462848348613dd1218dcce574b3e30901a9825a966cb85bda6a92ba9f9ce9ba325e4c475f9a678b930.json
+$B2=b1-b183edd918de93c0b009b0f662502ff851c8e95177c812f2eabc82cd65c2c53e1cb12c56719d6e7c474a0f3d58d3c3d2839dfbf0c2e62f6ee6758e16c16b38c2.json
+$B3=b1-c25fbc404ae239a8bf9f3d5f65f3f27d489fb4c8e48de0613b1c59c6fc00718243b2c84a3d7060350cbe4442d340d4826d4d1948b9e9938b31807e64c18adbc4.json
 
 agd tx swingset install-bundle @$B1 --from $WALLET --node $NODE --chain-id $CHAIN_ID --gas=auto --gas-adjustment=1.2 -y -b block
 agd tx swingset install-bundle @$B2 --from $WALLET --node $NODE --chain-id $CHAIN_ID --gas=auto --gas-adjustment=1.2 -y -b block
 agd tx swingset install-bundle @$B3 --from $WALLET --node $NODE --chain-id $CHAIN_ID --gas=auto --gas-adjustment=1.2 -y -b block
 ```
 
+If the bundles are already on chain, you can skip this step. Information on how to retrieve [posted here](https://gist.github.com/dckc/4088fb3cf7b568ce81ddabab2817f336).
+
+
 ### Noble USDC 
 
 ```bash
 agd tx gov submit-proposal swingset-core-eval gov-start-psm-permit.json gov-start-usdc-psm.js \
   --title="Start USDC (Noble) PSM" --description="Evaluate gov-start-usdc-psm.js" --deposit=1000000ubld \
-    --gas=auto --gas-adjustment=1.2
+    --gas=auto --gas-adjustment=1.2 --from $WALLET -y -b block
 ```
 
 
@@ -25,7 +28,7 @@ agd tx gov submit-proposal swingset-core-eval gov-start-psm-permit.json gov-star
 ```bash
 agd tx gov submit-proposal swingset-core-eval gov-start-psm-permit.json gov-start-usdt-psm.js \
   --title="Start USDT (Kava) PSM" --description="Evaluate gov-start-usdt-psm.js" --deposit=1000000ubld \
-    --gas=auto --gas-adjustment=1.2
+    --gas=auto --gas-adjustment=1.2 --wallet $from -y -b block
 ```
 
 ## IBC Denoms
@@ -52,15 +55,24 @@ denom_trace:
 
 ## To Generate
 
-1. Check out agoric-sdk#740eacc
+1. Checkout the `mainnet1B-rc3` tag on `agoric-sdk` to grab the latest version of the sdk deployed on chain.
 
-2. Fix relative import reference in `packages/builders/scripts/inter-protocol/add-collateral-core.js
+```bash
+cd ~/agoric-sdk
+git fetch --tags
+git checkout -b mainnet1B-rc3 tags/mainnet1B-rc3
+yarn install && yarn build
+```
 
-3. ANCHOR_DENOM=ibc/abc123 INTERCHAIN_DENOM=irrelevant agoric run scripts/inter-protocol/add-collateral-core.js
+2. Navigate to `packages/inter-protocol`, and execute the following for each denom:
 
-4. Ignore add-collateral proposal, and check in start-psm proposal.
+```bash
+ANCHOR_DENOM=ibc/abc123 INTERCHAIN_DENOM=irrelevant agoric run scripts/inter-protocol/add-collateral-core.js
+```
 
-5. Manually add `keyword` and `proposedName` to `anchorOptions` in `gov-start-psm.js`
+3. Ignore the add-collateral proposal in the output, and check in start-psm proposal.
+
+4. Manually add `keyword` and `proposedName` to `anchorOptions` in `gov-start-psm.js`
 
 
-See https://github.com/Agoric/agoric-sdk/discussions/8450 for more details. You can also check out [this fork](https://github.com/Agoric/agoric-sdk/compare/master...0xpatrickdev:agoric-sdk:pc/psm-proposals?expand=1).
+See https://github.com/Agoric/agoric-sdk/discussions/8450 for more details.
