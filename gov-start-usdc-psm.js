@@ -3,7 +3,7 @@
 
 const manifestBundleRef = {
   bundleID:
-    "b1-eb7db38002a9f53cb6df39c5b23c816d8b6381c1388c9fec772e0cdbb055f55641da9219a4891ecee5697c9cc3c6a988d0ffa75d191e806f4867990b4ce3df83",
+    "b1-4c34c89b707bc8ece5a41e97e6a354081f7ae8a40391f1462848348613dd1218dcce574b3e30901a9825a966cb85bda6a92ba9f9ce9ba325e4c475f9a678b930",
 };
 const getManifestCall = harden([
   "getManifestForPsm",
@@ -18,11 +18,11 @@ const getManifestCall = harden([
     installKeys: {
       mintHolder: {
         bundleID:
-          "b1-820164f689d730163488efe6911b89f4f4dfb9b11b33b711c24340416c7ea90ec6a311ceb8c26cc2d1c6624e8d5b714c73eab1a08d99bb81c22d815acefd94fd",
+          "b1-b183edd918de93c0b009b0f662502ff851c8e95177c812f2eabc82cd65c2c53e1cb12c56719d6e7c474a0f3d58d3c3d2839dfbf0c2e62f6ee6758e16c16b38c2",
       },
       psm: {
         bundleID:
-          "b1-d6bf1435f5ef0fc5f8386bc6f6d4563f9f2b8c1117d7d778e39d34601436d78cac7e5000f73857ed5b3dcc76742ff0d392d8a3e3164d7775a9c85ed0c30fdeda",
+          "b1-c25fbc404ae239a8bf9f3d5f65f3f27d489fb4c8e48de0613b1c59c6fc00718243b2c84a3d7060350cbe4442d340d4826d4d1948b9e9938b31807e64c18adbc4",
       },
     },
   },
@@ -129,15 +129,13 @@ const overrideManifest = {
     } = allPowers;
     const [exportedGetManifest, ...manifestArgs] = getManifestCall;
 
-    /** @type {(ref: import\('./externalTypes.js').ManifestBundleRef) => Promise<Installation<unknown>>} */
     const defaultRestoreRef = async (ref) => {
       // extract-proposal.js creates these records, and bundleName is
       // the name under which the bundle was installed into
       // config.bundles
-      const p =
-        "bundleName" in ref
-          ? E(vatAdminSvc).getBundleIDByName(ref.bundleName)
-          : ref.bundleID;
+      const p = ref.bundleName
+        ? E(vatAdminSvc).getBundleIDByName(ref.bundleName)
+        : ref.bundleID;
       const bundleID = await p;
       const label = bundleID.slice(0, 8);
       return E(zoe).installBundleID(bundleID, label);
