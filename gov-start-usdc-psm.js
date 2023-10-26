@@ -15,16 +15,7 @@ const getManifestCall = harden([
       keyword: "USDC",
       proposedName: "USDC",
     },
-    installKeys: {
-      mintHolder: {
-        bundleID:
-          "b1-b183edd918de93c0b009b0f662502ff851c8e95177c812f2eabc82cd65c2c53e1cb12c56719d6e7c474a0f3d58d3c3d2839dfbf0c2e62f6ee6758e16c16b38c2",
-      },
-      psm: {
-        bundleID:
-          "b1-c25fbc404ae239a8bf9f3d5f65f3f27d489fb4c8e48de0613b1c59c6fc00718243b2c84a3d7060350cbe4442d340d4826d4d1948b9e9938b31807e64c18adbc4",
-      },
-    },
+    installKeys: {},
   },
 ]);
 const overrideManifest = {
@@ -97,7 +88,7 @@ const overrideManifest = {
   overrideManifest,
   E,
   log = console.info,
-  restoreRef: overrideRestoreRef,
+  restoreRef = () => {},
 }) => {
   const { entries, fromEntries } = Object;
 
@@ -127,19 +118,6 @@ const overrideManifest = {
       },
     } = allPowers;
     const [exportedGetManifest, ...manifestArgs] = getManifestCall;
-
-    const defaultRestoreRef = async (ref) => {
-      // extract-proposal.js creates these records, and bundleName is
-      // the name under which the bundle was installed into
-      // config.bundles
-      const p = ref.bundleName
-        ? E(vatAdminSvc).getBundleIDByName(ref.bundleName)
-        : ref.bundleID;
-      const bundleID = await p;
-      const label = bundleID.slice(0, 8);
-      return E(zoe).installBundleID(bundleID, label);
-    };
-    const restoreRef = overrideRestoreRef || defaultRestoreRef;
 
     // Get the on-chain installation containing the manifest and behaviors.
     console.info("evaluateBundleCap", {
