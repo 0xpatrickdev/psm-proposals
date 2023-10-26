@@ -120,9 +120,8 @@ const overrideManifest = {
     // NOTE: If updating any of these names extracted from `allPowers`, you must
     // change `permits` above to reflect their accessibility.
     const {
-      consume: { vatAdminSvc, zoe, agoricNamesAdmin },
+      consume: { vatAdminSvc, zoe },
       evaluateBundleCap,
-      installation: { produce: produceInstallations },
       modules: {
         utils: { runModuleBehaviors },
       },
@@ -162,28 +161,14 @@ const overrideManifest = {
       exportedGetManifest,
       behaviors: Object.keys(manifestNS),
     });
-    const {
-      manifest,
-      options: rawOptions,
-      installations: rawInstallations,
-    } = await manifestNS[exportedGetManifest](
-      harden({ restoreRef }),
-      ...manifestArgs
-    );
+    const { manifest, options: rawOptions } = await manifestNS[
+      exportedGetManifest
+    ](harden({ restoreRef }), ...manifestArgs);
 
-    // Await references in the options or installations.
-    const [options, installations] = await Promise.all(
-      [rawOptions, rawInstallations].map(shallowlyFulfilled)
-    );
+    const options = await shallowlyFulfilled(rawOptions);
 
+    // @skip, these bundles are already installed
     // Publish the installations for behavior dependencies.
-    const installAdmin = E(agoricNamesAdmin).lookupAdmin("installation");
-    await Promise.all(
-      entries(installations || {}).map(([key, value]) => {
-        produceInstallations[key].resolve(value);
-        return E(installAdmin).update(key, value);
-      })
-    );
 
     // Evaluate the manifest for our behaviors.
     return runModuleBehaviors({
