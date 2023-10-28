@@ -25,8 +25,7 @@
       "mintHolder": "zoe",
       "contractGovernor": "zoe",
       "psm": "zoe"
-    },
-    "produce": "makeCoreProposalBehavior"
+    }
   },
   "produce": {
     "testFirstAnchorKit": true,
