@@ -145,8 +145,7 @@ const overrideManifest = {
 
     const options = await shallowlyFulfilled(rawOptions);
 
-    // @skip, these bundles are already installed
-    // Publish the installations for behavior dependencies.
+    // All dependency bundles are already installed, so we ignore `installations` from the getManifest response.
 
     // Evaluate the manifest for our behaviors.
     return runModuleBehaviors({
